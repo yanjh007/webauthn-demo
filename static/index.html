@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="css/milligram.min.css">
+    <style>
+        html, body, .container, .row {
+            height: 100%;
+        }
+
+        .formcontainer {
+            background: #f0f0f0;
+            padding: 15px;
+        }
+
+        .formcontainer form, .formcontainer fieldset{
+            margin:0;
+        }
+
+        .secretcontainer {
+            background: #f0f0f0;
+            padding: 15px;
+        }
+
+        #registerContainer, #mainContainer {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row row-center">
+            <div class="column" id="c_register">
+                <div class="formcontainer register">
+                    <h3>用户注册</h3>
+                    <form>
+                      <fieldset>
+                        <label for="login">登录名</label>
+                        <input type="text" name="login" id = "r_lname">                        
+                        
+                        <label for="name">用户名</label>
+                        <input type="text" name="name"  id = "r_name">
+
+                        <input type="button" onclick="doRegister()" value = "注 册" />
+                      </fieldset>
+                    </form>
+                    <a href="javascript:void(0)" onclick="showView(1)">已经注册了? 重新登录</a>
+                </div>
+            </div>
+
+            <div class="column" id="c_login">
+                <div class="formcontainer login">
+                    <h3>系统登录</h3>
+                    <form>
+                      <fieldset>
+                        <label for="login">登录名称</label>
+                        <input type="text" name="login" id = "r_login">
+
+                        <input type="button" onclick="doLogin()" value = "登 录" />
+                      </fieldset>
+                    </form>
+                    <a href="javascript:void(0)" onclick="showView(2)">没有注册? 去注册</a>
+                </div>
+            </div>
+
+            <div class="column" id="c_home">
+                <div class="secretcontainer">
+                    <h3>你好: <span id="v_name"></span>!</h3>
+                    <div id="v_secret"></div>
+                    <input type="button" onclick="doLogout()" value = "注 销" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/base64url-arraybuffer.js"></script>
+    <script src="js/webauthn.auth.js"></script>
+    <script src="js/view.js"></script>
+    <script>
+        var r_login = document.getElementById("r_login")
+        var r_lname = document.getElementById("r_lname")
+        var r_name  = document.getElementById("r_name")
+
+        var v_name    = document.getElementById("v_name")
+        var v_secret  = document.getElementById("v_secret")
+
+        var c_home     = document.getElementById("c_home")
+        var c_login    = document.getElementById("c_login")
+        var c_register = document.getElementById("c_register")
+
+        var docReady = function(){
+            getUinfo().then(res => {
+                if (res.R == 200) {
+                    showHome(res)
+                } else {
+                    showView(1)
+                }
+            })
+        };
+
+        if (document.readyState === "complete" ||(document.readyState !== "loading" && !document.documentElement.doScroll)) {
+            docReady();
+        } else {
+            document.addEventListener("DOMContentLoaded", docReady);
+        }
+    </script>
+</body>
+</html>
